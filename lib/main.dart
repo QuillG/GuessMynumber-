@@ -1,6 +1,15 @@
-
 import 'package:app/screen/game.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+
+bool get isDesktop {
+  if (kIsWeb) return false;
+  return [
+    TargetPlatform.windows,
+    TargetPlatform.linux,
+    TargetPlatform.macOS,
+  ].contains(defaultTargetPlatform);
+}
 
 void main() {
   runApp(const MyApp());
@@ -9,30 +18,39 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+    return FluentApp(
+      title: 'Accueil',
+      home: StartPage(title: "Guess My Number"),
+      theme: FluentThemeData(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+// Example HomePage using Fluent UI widgets
+class StartPage extends StatelessWidget {
+  final String title;
+  const StartPage({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldPage(
+      header: Text(title, style: FluentTheme.of(context).typography.title),
+      content: Center(
+        child: Button(
+          child: const Text('Jouer à Guess My Number'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              FluentPageRoute(
+                builder: (context) => const MyHomePage(title: 'Guess My Number'),
+              ),
+            );
+          },
+        ),
       ),
-      home: MyHomePage(title: "Guess My Number"),
     );
   }
 }
